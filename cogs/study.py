@@ -302,6 +302,10 @@ class Study(commands.Cog):
             icon_url=ctx.author.avatar_url,
         )
         await ctx.send(embed=emb)
+        
+    @commands.command()
+    async def source(self, ctx):
+        await ctx.send("Here's the repository link:\nhttps://github.com/o-BigBoy/SankhoCordBot")
 
 
 def setup(bot):
