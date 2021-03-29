@@ -1,1 +1,1 @@
-# SankhoCordBot
+# SankhoCord
