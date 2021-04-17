@@ -124,6 +124,8 @@ class Study(commands.Cog):
     async def on_voice_state_update(self, member, before, after):
         if member.bot:
             return
+        if before.channel == after.channel:
+            return
         guild = self.bot.get_guild(guild_id)
         channel = guild.get_channel(study_channel_id)
         ninja = guild.get_role(ninja_role_id)
@@ -302,10 +304,6 @@ class Study(commands.Cog):
             icon_url=ctx.author.avatar_url,
         )
         await ctx.send(embed=emb)
-        
-    @commands.command()
-    async def source(self, ctx):
-        await ctx.send("Here's the repository link:\nhttps://github.com/o-BigBoy/SankhoCordBot")
 
 
 def setup(bot):
