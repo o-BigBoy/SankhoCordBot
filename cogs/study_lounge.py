@@ -256,15 +256,19 @@ class Study(commands.Cog):
             user = ctx.author
         lb = db.child("MEMBER_TIME").child(user.id).get().val()
         times = []
-        for mins in (
-            lb["TOTAL"],
-            lb["DAILY"],
-            lb["WEEKLY"],
-            lb["MONTHLY"],
-            lb["VIDEO"],
-            lb["STREAM"],
-        ):
-            times.append(mins_hours(mins))  # REMEMBER ORDER
+        if lb != None:
+            for mins in (
+                lb["TOTAL"],
+                lb["DAILY"],
+                lb["WEEKLY"],
+                lb["MONTHLY"],
+                lb["VIDEO"],
+                lb["STREAM"],
+            ):
+                times.append(mins_hours(mins))  # REMEMBER ORDER
+        else:
+            for _ in range(6):
+                times.append((0, 0))
         total = str(times[0][0]) + " Hrs " + str(times[0][1]) + " Mins"
         daily = str(times[1][0]) + " Hrs " + str(times[1][1]) + " Mins"
         weekly = str(times[2][0]) + " Hrs " + str(times[2][1]) + " Mins"
