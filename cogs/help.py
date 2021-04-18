@@ -12,14 +12,18 @@ class Help(commands.Cog):
         try:
 
             h = discord.Embed(
-                title="",
-                description="Need Help?\n<> - optional arguments\n() - needed arguments\n [] - aliases",
-                color=0x006900,
+                title="NEED HELP?",
+                description="<> - optional arguments\n() - needed arguments\n [] - aliases",
+                color=0xFFFFFF,
             )
-            h.add_field(name="__ABOUT__", value=f"\nPrefix : `S.`")
+            h.add_field(name="__ABOUT__", value=f"\nPrefix : `S.`", inline=False)
             h.add_field(
                 name="__STUDY VC__",
-                value=f"`studytime <@user>` [st]\n`leaderboard <d/w/m>` [lb] | d-daily, w-weekly, m-monthly",
+                value=f"`stats <@user>` [st, studytime]\n`leaderboard` [lb]",
+                inline=False,
+            )
+            h.add_field(
+                name="__MISC__", value="`source` source code for the bot", inline=False
             )
 
             await ctx.send(embed=h)
