@@ -163,7 +163,7 @@ class Study(commands.Cog):
                     f"{mem.mention} was moved to <#{LOUNGE_VC_ID}>\n->They didnot turn on camera\n-> They didnot share their screen"
                 )
 
-    @tasks.loop(seconds=TIMER_REFRESH_INTERVAL)
+    @tasks.loop(minutes=TIMER_REFRESH_INTERVAL)
     async def timer_refresh(self):
         studying = self.get_studying()
         for mem in studying:
