@@ -5,8 +5,8 @@ from discord.ext import commands, tasks
 from json import loads
 import pyrebase
 from decouple import config
-from datetime import datetime as dt
-from pytz import timezone as tz
+from datetime import datetime
+from pytz import timezone
 from collections import OrderedDict
 
 # CHANNEL IDS
@@ -62,6 +62,28 @@ def add_mins(id_: str, timers=("TOTAL", "DAILY", "WEEKLY", "MONTHLY")):
     for timer in timers:
         member_time[timer] = int(member_time[timer]) + TIMER_REFRESH_INTERVAL
     db.child("MEMBER_TIME").child(id_).set(member_time)
+
+
+### reset functions
+def resetDaily():
+    times = dict(db.child("MEMBER_TIME").get().val())
+    for id_ in times:
+        times[id_]["DAILY"] = 0
+    db.child("MEMBER_TIME").set(times)
+
+
+def resetWeekly():
+    times = dict(db.child("MEMBER_TIME").get().val())
+    for id_ in times:
+        times[id_]["WEEKLY"] = 0
+    db.child("MEMBER_TIME").set(times)
+
+
+def resetMonthly():
+    times = dict(db.child("MEMBER_TIME").get().val())
+    for id_ in times:
+        times[id_]["MONTHLY"] = 0
+    db.child("MEMBER_TIME").set(times)
 
 
 class Study(commands.Cog):
@@ -175,6 +197,20 @@ class Study(commands.Cog):
                 T = ("TOTAL", "DAILY", "WEEKLY", "MONTHLY")
             ID = mem[0]
             add_mins(ID, T)
+
+    # Resets leaderboards everyday.
+    @tasks.loop(minutes=60)
+    async def reset(self):
+        now = datetime.now(timezone("Asia/Kolkata"))
+        if now.hour == 0:
+            resetDaily()
+            await self.BOT_CHANNEL.send(f"> RESET DAILY LEADERBOARD")
+            if now.weekday() == 0:
+                resetWeekly()
+                await self.BOT_CHANNEL.send(f"> RESET WEEKLY LEADERBOARD")
+            if now.day == 1:
+                resetMonthly()
+                await self.BOT_CHANNEL.send(f"> RESET MONTHLY LEADERBOARD")
 
     ###########################################################
 
