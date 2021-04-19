@@ -19,8 +19,8 @@ LOUNGE_VC_ID = 822865823285903380
 VIDEO_VC_ID = 806098255875932170
 
 # TIMER VARIABLES
-DELETE_MESSAGES = True
-DELETE_AFTER = 60  # 1 min
+# DELETE_MESSAGES = True
+DELETE_AFTER = 75  # 1 min
 KICK_STALKERS_AFTER = 90  # 1.5 min
 TIMER_REFRESH_INTERVAL = 10  # study time gets updated every this mins
 
@@ -89,8 +89,6 @@ def resetMonthly():
 class Study(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        if not DELETE_MESSAGES:
-            DELETE_AFTER = None
         self.GUILD = self.bot.get_guild(GUILD_ID)
         self.BOT_CHANNEL = self.GUILD.get_channel(BOT_CHANNEL_ID)
         self.NINJA_ROLE = self.GUILD.get_role(NINJA_ROLE_ID)
