@@ -219,7 +219,10 @@ class Study(commands.Cog):
         lb = OrderedDict(reversed(list(lb.items())))  # REVERSE THE SORTED DICT
         desc = f""
         for mem_id in lb:
-            member = await self.GUILD.fetch_member(mem_id)
+            try:
+                member = await self.GUILD.fetch_member(mem_id)
+            except:
+                member = "UNKNOWN MEMBER"
             hrs, mins = mins_hours(lb[mem_id][timer])
             position = list(lb.keys()).index(mem_id) + 1
             if position > 10:
@@ -233,7 +236,10 @@ class Study(commands.Cog):
                     desc += f"#{position} | {member} | {hrs} Hrs {mins} Mins\n"
 
         mem_id = str(ctx.author.id)
-        member = await self.GUILD.fetch_member(mem_id)
+        try:
+            member = await self.GUILD.fetch_member(mem_id)
+        except:
+            member = "UNKNOWN MEMBER"
         hrs, mins = mins_hours(lb[mem_id][timer])
         position = list(lb.keys()).index(mem_id) + 1
 
