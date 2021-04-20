@@ -208,13 +208,19 @@ class Study(commands.Cog):
         now = datetime.now(timezone("Asia/Kolkata"))
         if now.hour == 0:
             resetDaily()
-            await self.BOT_CHANNEL.send(f"> RESET DAILY LEADERBOARD")
+            await self.BOT_CHANNEL.send(
+                f"> RESET DAILY LEADERBOARD AT `{datetime.now(timezone('Asia/Kolkata'))}`"
+            )
             if now.weekday() == 0:
                 resetWeekly()
-                await self.BOT_CHANNEL.send(f"> RESET WEEKLY LEADERBOARD")
+                await self.BOT_CHANNEL.send(
+                    f"> RESET WEEKLY LEADERBOARD AT `{datetime.now(timezone('Asia/Kolkata'))}`"
+                )
             if now.day == 1:
                 resetMonthly()
-                await self.BOT_CHANNEL.send(f"> RESET MONTHLY LEADERBOARD")
+                await self.BOT_CHANNEL.send(
+                    f"> RESET MONTHLY LEADERBOARD AT `{datetime.now(timezone('Asia/Kolkata'))}`"
+                )
 
     ###########################################################
 

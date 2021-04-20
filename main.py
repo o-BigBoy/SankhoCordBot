@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 import os
 from decouple import config
+from datetime import datetime
+from pytz import timezone
 
 print("---> BOT is waking up\n")
 
@@ -11,6 +13,8 @@ intents.presences = True
 
 bot = commands.Bot(command_prefix=["S.", "s."], case_insensitive=True, intents=intents)
 bot.remove_command("help")
+
+BOT_CHANNEL_ID = 801100961313194004
 
 
 def load_cogs():
@@ -27,6 +31,8 @@ async def on_ready():
         activity=discord.Activity(type=discord.ActivityType.watching, name="Ankoosh <3")
     )
     load_cogs()
+    channel = bot.get_channel(BOT_CHANNEL_ID)
+    await channel.send(f"> BOT ONLINE AT `{datetime.now(timezone('Asia/Kolkata'))}`")
     print("\n---> BOT is awake\n")
 
 
