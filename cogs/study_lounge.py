@@ -132,7 +132,7 @@ class Study(commands.Cog):
 
         #### WHEN SOMEONE PINGS A MEMBER IN STUDY VC ###
         for ping in message.mentions:
-            if ping.id in studying:
+            if str(ping.id) in str(studying):
                 if message.channel == BOT_CHANNEL_ID:
                     continue
                 await message.channel.send(
