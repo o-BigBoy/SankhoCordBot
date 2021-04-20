@@ -70,6 +70,7 @@ def resetDaily():
     for id_ in times:
         times[id_]["DAILY"] = 0
     db.child("MEMBER_TIME").set(times)
+    print("reset daily")
 
 
 def resetWeekly():
@@ -77,6 +78,7 @@ def resetWeekly():
     for id_ in times:
         times[id_]["WEEKLY"] = 0
     db.child("MEMBER_TIME").set(times)
+    print("reset weekly")
 
 
 def resetMonthly():
@@ -84,6 +86,7 @@ def resetMonthly():
     for id_ in times:
         times[id_]["MONTHLY"] = 0
     db.child("MEMBER_TIME").set(times)
+    print("reset monthly")
 
 
 class Study(commands.Cog):
@@ -100,6 +103,7 @@ class Study(commands.Cog):
         self.LOUNGE_VC = self.GUILD.get_channel(LOUNGE_VC_ID)
         self.kick_stalkers.start()
         self.timer_refresh.start()
+        self.reset.start()
 
     def get_studying(self):
         # RETURNS MEMBERS IN STUDY STAGE
@@ -290,6 +294,19 @@ class Study(commands.Cog):
             color=0xFFFFFF,
         )
         await ctx.send(embed=emb)
+
+    @commands.command()
+    async def manual_reset(self, ctx, timer=""):
+        timer = timer.upper()
+        if timer == "" or not timer in ("DAILY", "WEEKLY", "MONTHLY"):
+            await ctx.send("DAILY | WEEKLEY | MONTHLY")
+            return
+        if timer == "DAILY":
+            resetDaily()
+        elif timer == "WEEKLY":
+            resetWeekly()
+        elif timer == "MONTHLY":
+            resetMonthly()
 
 
 def setup(bot):
