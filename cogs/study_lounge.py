@@ -156,7 +156,7 @@ class Study(commands.Cog):
             # CHECK IF SCREENSHARE or VIDEO IS NEEDED
             if after.channel.id == VIDEO_VC_ID:
                 msg += f"-> **You have to turn on your video or share your screen**\n     or you will be moved to <#{LOUNGE_VC_ID}>"
-            await self.BOT_CHANNEL.send(msg)
+            await self.BOT_CHANNEL.send(msg, delete_after=DELETE_AFTER)
         elif (
             before.channel != None
             and after.channel == None
@@ -166,7 +166,8 @@ class Study(commands.Cog):
             await member.add_roles(self.NINJA_ROLE)
             await member.remove_roles(self.STUDYING_ROLE)
             await self.BOT_CHANNEL.send(
-                f"{member.mention} left <#{before.channel.id}> 🔴\n-> Access granted to other channels"
+                f"{member.mention} left <#{before.channel.id}> 🔴\n-> Access granted to other channels",
+                delete_after=DELETE_AFTER,
             )
 
     ###########################################################
@@ -180,7 +181,8 @@ class Study(commands.Cog):
                 await mem.move_to(channel=self.LOUNGE_VC)
                 print(f"moved {mem}")
                 await self.BOT_CHANNEL.send(
-                    f"{mem.mention} was moved to <#{LOUNGE_VC_ID}>\n->They didnot turn on camera\n-> They didnot share their screen"
+                    f"{mem.mention} was moved to <#{LOUNGE_VC_ID}>\n->They didnot turn on camera\n-> They didnot share their screen",
+                    delete_after=DELETE_AFTER,
                 )
 
     @tasks.loop(minutes=TIMER_REFRESH_INTERVAL)
@@ -197,7 +199,7 @@ class Study(commands.Cog):
             add_mins(ID, T)
 
     # Resets leaderboards everyday.
-    @tasks.loop(minutes=60)
+    @tasks.loop(minutes=30)
     async def reset(self):
         now = datetime.now(timezone("Asia/Kolkata"))
         if now.hour == 0:
