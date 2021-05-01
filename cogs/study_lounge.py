@@ -170,7 +170,7 @@ class Study(commands.Cog):
             if after.channel.id == VIDEO_VC_ID:
                 msg += f"-> **You have to turn on your video**\n     or you will be moved to <#{LOUNGE_VC_ID}>"
             elif after.channel.id == STREAM_VC_ID:
-                msg += f"-> **You have to share your screen**\n     or you will be moved to <#{LOUNGE_VC_ID}>"
+                msg += f"-> **You have to share your screen**\n     or your time will not be counted"
             await self.BOT_CHANNEL.send(msg, delete_after=DELETE_AFTER)
         elif (
             before.channel != None
