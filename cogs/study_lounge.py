@@ -16,7 +16,9 @@ STUDYING_ROLE_ID = 801096719982657556
 NINJA_ROLE_ID = 785027080713797641
 BOT_CHANNEL_ID = 801100961313194004  # BOT MESSAGES GO HERE
 LOUNGE_VC_ID = 822865823285903380
-VIDEO_VC_ID = 806098255875932170
+VIDEO_VC_ID = 806098255875932170  # VIDEO/STREAM BOTH GO INTO VIDEO TIMER
+STREAM_VC_ID = 837889538855927819  # STREAM GOES INTO STREAM
+STUDY_VC_ID = 831055532759449610  # STAGE VC
 
 # TIMER VARIABLES
 # DELETE_MESSAGES = True
@@ -100,6 +102,8 @@ class Study(commands.Cog):
             c for c in self.GUILD.categories if c.id == STUDY_CATEGORY_ID
         ][0]
         self.VIDEO_VC = self.GUILD.get_channel(VIDEO_VC_ID)
+        self.STREAM_VC = self.GUILD.get_channel(STREAM_VC_ID)
+        self.STUDY_VC = self.GUILD.get_channel(STUDY_VC_ID)
         self.LOUNGE_VC = self.GUILD.get_channel(LOUNGE_VC_ID)
         self.kick_stalkers.start()
         self.timer_refresh.start()
@@ -108,23 +112,16 @@ class Study(commands.Cog):
     def get_studying(self):
         # RETURNS MEMBERS IN STUDY STAGE
         studying = []
-        for vc in self.STUDY_CATEGORY.stage_channels:
-            if vc.id == LOUNGE_VC_ID:
-                continue
-            for mem in vc.members:
-                if not mem.bot:
-                    studying.append((mem.id, "NONE"))
 
-        for vc in self.STUDY_CATEGORY.voice_channels:
-            if vc.id == VIDEO_VC_ID:
-                for mem in vc.members:
-                    if not mem.bot:
-                        if mem.voice.self_video:
-                            studying.append((mem.id, "VIDEO"))
-                        elif mem.voice.self_stream:
-                            studying.append((mem.id, "STREAM"))
-                        else:
-                            studying.append((mem.id, "NONE"))
+        for mem in self.STUDY_VC.members:  # NORMAL STODYING VC
+            if not mem.bot:
+                studying.append((mem.id, "NONE"))
+        for mem in self.VIDEO_VC.members:  # VC ONLY FOR VIDEO
+            if mem.voice.self_video and not mem.bot:
+                studying.append((mem.id, "VIDEO"))
+        for mem in self.STREAM_VC.members:  # VC ONLY FOR STREAMING
+            if mem.voice.self_stream and not mem.bot:
+                studying.append((mem.id, "STREAM"))
 
         return studying
 
@@ -137,7 +134,7 @@ class Study(commands.Cog):
         #### WHEN SOMEONE PINGS A MEMBER IN STUDY VC ###
         for ping in message.mentions:
             if str(ping.id) in str(studying):
-                if message.channel == BOT_CHANNEL_ID:
+                if str(message.channel.id) == str(BOT_CHANNEL_ID):
                     continue
                 await message.channel.send(
                     f"{message.author.mention}, **{ping}** is in **{ping.voice.channel.name}**, do not disturb them <a:AngryAwooGlitch:786456477589962772>",
@@ -146,7 +143,7 @@ class Study(commands.Cog):
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
-        if member.bot or before.channel == after.channel:
+        if member.bot or (before.channel == after.channel):
             return
         if (
             before.channel == None
@@ -159,13 +156,14 @@ class Study(commands.Cog):
             msg = f"{member.mention} joined <#{after.channel.id}> 🟢\n-> Access blocked from other channels\n"
             # CHECK IF SCREENSHARE or VIDEO IS NEEDED
             if after.channel.id == VIDEO_VC_ID:
-                msg += f"-> **You have to turn on your video or share your screen**\n     or you will be moved to <#{LOUNGE_VC_ID}>"
+                msg += f"-> **You have to turn on your video**\n     or you will be moved to <#{LOUNGE_VC_ID}>"
+            elif after.channel.id == STREAM_VC_ID:
+                msg += f"-> **You have to share your screen**\n     or you will be moved to <#{LOUNGE_VC_ID}>"
             await self.BOT_CHANNEL.send(msg, delete_after=DELETE_AFTER)
         elif (
             before.channel != None
             and after.channel == None
             and before.channel.category_id == STUDY_CATEGORY_ID
-            and before.channel.id != LOUNGE_VC_ID
         ):
             await member.add_roles(self.NINJA_ROLE)
             await member.remove_roles(self.STUDYING_ROLE)
@@ -185,7 +183,7 @@ class Study(commands.Cog):
                 await mem.move_to(channel=self.LOUNGE_VC)
                 print(f"moved {mem}")
                 await self.BOT_CHANNEL.send(
-                    f"{mem.mention} was moved to <#{LOUNGE_VC_ID}>\n->They didnot turn on camera\n-> They didnot share their screen",
+                    f"{mem.mention} was moved to <#{LOUNGE_VC_ID}>\n->They didnot turn on turn oon video",
                     delete_after=DELETE_AFTER,
                 )
 
@@ -203,7 +201,7 @@ class Study(commands.Cog):
             add_mins(ID, T)
 
     # Resets leaderboards everyday.
-    @tasks.loop(minutes=30)
+    @tasks.loop(minutes=50)
     async def reset(self):
         now = datetime.now(timezone("Asia/Kolkata"))
         if now.hour == 0:
@@ -233,7 +231,7 @@ class Study(commands.Cog):
         for mem_id in lb:
             try:
                 member = await self.GUILD.fetch_member(mem_id)
-            except:
+            except Exception:
                 member = "UNKNOWN MEMBER"
             hrs, mins = mins_hours(lb[mem_id][timer])
             position = list(lb.keys()).index(mem_id) + 1
@@ -250,7 +248,7 @@ class Study(commands.Cog):
         mem_id = str(ctx.author.id)
         try:
             member = await self.GUILD.fetch_member(mem_id)
-        except:
+        except Exception:
             member = "UNKNOWN MEMBER"
         hrs, mins = mins_hours(lb[mem_id][timer])
         position = list(lb.keys()).index(mem_id) + 1
