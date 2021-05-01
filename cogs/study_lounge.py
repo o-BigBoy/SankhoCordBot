@@ -19,6 +19,7 @@ LOUNGE_VC_ID = 822865823285903380
 VIDEO_VC_ID = 806098255875932170  # VIDEO/STREAM BOTH GO INTO VIDEO TIMER
 STREAM_VC_ID = 837889538855927819  # STREAM GOES INTO STREAM
 STUDY_VC_ID = 831055532759449610  # STAGE VC
+PRIVATE_VC_ID = 837898127222636544  # PRIVATE VC FOR STAFF AND AKATSUKI
 
 # TIMER VARIABLES
 # DELETE_MESSAGES = True
@@ -104,6 +105,7 @@ class Study(commands.Cog):
         self.VIDEO_VC = self.GUILD.get_channel(VIDEO_VC_ID)
         self.STREAM_VC = self.GUILD.get_channel(STREAM_VC_ID)
         self.STUDY_VC = self.GUILD.get_channel(STUDY_VC_ID)
+        self.PRIVATE_VC = self.GUILD.get_channel(PRIVATE_VC_ID)
         self.LOUNGE_VC = self.GUILD.get_channel(LOUNGE_VC_ID)
         self.kick_stalkers.start()
         self.timer_refresh.start()
@@ -116,6 +118,16 @@ class Study(commands.Cog):
         for mem in self.STUDY_VC.members:  # NORMAL STODYING VC
             if not mem.bot:
                 studying.append((mem.id, "NONE"))
+
+        for mem in self.PRIVATE_VC.members:
+            if not mem.bot:
+                if mem.voice.self_video:
+                    studying.append((mem.id, "VIDEO"))
+                elif mem.voice.self_stream:
+                    studying.append((mem.id, "STREAM"))
+                else:
+                    studying.append((mem.id, "NONE"))
+
         for mem in self.VIDEO_VC.members:  # VC ONLY FOR VIDEO
             if mem.voice.self_video and not mem.bot:
                 studying.append((mem.id, "VIDEO"))
@@ -183,7 +195,7 @@ class Study(commands.Cog):
                 await mem.move_to(channel=self.LOUNGE_VC)
                 print(f"moved {mem}")
                 await self.BOT_CHANNEL.send(
-                    f"{mem.mention} was moved to <#{LOUNGE_VC_ID}>\n->They didnot turn on turn oon video",
+                    f"{mem.mention} was moved to <#{LOUNGE_VC_ID}>\n->They didnot turn on video",
                     delete_after=DELETE_AFTER,
                 )
 
