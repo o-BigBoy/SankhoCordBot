@@ -191,7 +191,7 @@ class Study(commands.Cog):
         # MOVE MEMBERS WHO DONT HAVE VIDEO OR SCREENSHARE
         vc = self.VIDEO_VC
         for mem in vc.members:
-            if not (mem.voice.self_stream or mem.voice.self_video):
+            if not mem.voice.self_video:
                 await mem.move_to(channel=self.LOUNGE_VC)
                 print(f"moved {mem}")
                 await self.BOT_CHANNEL.send(
