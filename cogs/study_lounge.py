@@ -19,6 +19,7 @@ LOUNGE_VC_ID = 822865823285903380
 VIDEO_VC_ID = 806098255875932170  # VIDEO/STREAM BOTH GO INTO VIDEO TIMER
 STREAM_VC_ID = 837889538855927819  # STREAM GOES INTO STREAM
 STUDY_VC_ID = 831055532759449610  # STAGE VC
+STUDY_VC_NORMAL_ID = 840974183201636373  # NON STAGE VC
 PRIVATE_VC_ID = 837898127222636544  # PRIVATE VC FOR STAFF AND AKATSUKI
 
 # TIMER VARIABLES
@@ -105,6 +106,7 @@ class Study(commands.Cog):
         self.VIDEO_VC = self.GUILD.get_channel(VIDEO_VC_ID)
         self.STREAM_VC = self.GUILD.get_channel(STREAM_VC_ID)
         self.STUDY_VC = self.GUILD.get_channel(STUDY_VC_ID)
+        self.STUDY_VC_NORMAL = self.GUILD.get_channel(STUDY_VC_NORMAL_ID)
         self.PRIVATE_VC = self.GUILD.get_channel(PRIVATE_VC_ID)
         self.LOUNGE_VC = self.GUILD.get_channel(LOUNGE_VC_ID)
         self.kick_stalkers.start()
@@ -116,6 +118,10 @@ class Study(commands.Cog):
         studying = []
 
         for mem in self.STUDY_VC.members:  # NORMAL STODYING VC
+            if not mem.bot:
+                studying.append((mem.id, "NONE"))
+
+        for mem in self.STUDY_VC_NORMAL.members:  # NORMAL STODYING VC
             if not mem.bot:
                 studying.append((mem.id, "NONE"))
 
