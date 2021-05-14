@@ -153,7 +153,7 @@ class Study(commands.Cog):
         if message.author.bot:
             return
         studying = self.get_studying()
-
+        studying_ids = [mem[0] for mem in studying]
         #### WHEN SOMEONE PINGS A MEMBER IN STUDY VC ###
         for ping in message.mentions:
             if str(ping.id) in str(studying):
@@ -164,7 +164,10 @@ class Study(commands.Cog):
                     delete_after=DELETE_AFTER,
                 )
 
-        if message.author.id in self.message_count:
+        if (
+            message.author.id in self.message_count
+            and message.author.id in studying_ids
+        ):
             self.message_count[message.author.id] = (
                 int(self.message_count[message.author.id]) + 1
             )
