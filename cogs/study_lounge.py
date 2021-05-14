@@ -14,7 +14,8 @@ GUILD_ID = 785024897863647282
 STUDY_CATEGORY_ID = 785024897863647284
 STUDYING_ROLE_ID = 801096719982657556
 NINJA_ROLE_ID = 785027080713797641
-BOT_CHANNEL_ID = 801100961313194004  # BOT MESSAGES GO HERE
+BOT_CHANNEL_ID = 842629324846923786  # BOT MESSAGES GO HERE
+CAFE_LOUNGE_ID = 801100961313194004  # PPL TALK HERE, WHY?
 LOUNGE_VC_ID = 822865823285903380
 VIDEO_VC_ID = 806098255875932170  # VIDEO/STREAM BOTH GO INTO VIDEO TIMER
 STREAM_VC_ID = 837889538855927819  # STREAM GOES INTO STREAM
@@ -112,6 +113,8 @@ class Study(commands.Cog):
         self.kick_stalkers.start()
         self.timer_refresh.start()
         self.reset.start()
+        self.students_count = len(self.get_studying())
+        self.messge_count = {}
 
     def get_studying(self):
         # RETURNS MEMBERS IN STUDY STAGE
@@ -141,6 +144,7 @@ class Study(commands.Cog):
             if mem.voice.self_stream and not mem.bot:
                 studying.append((mem.id, "STREAM"))
 
+        self.students_count = len(studying)
         return studying
 
     @commands.Cog.listener()
@@ -152,12 +156,25 @@ class Study(commands.Cog):
         #### WHEN SOMEONE PINGS A MEMBER IN STUDY VC ###
         for ping in message.mentions:
             if str(ping.id) in str(studying):
-                if str(message.channel.id) == str(BOT_CHANNEL_ID):
+                if str(message.channel.id) == str(CAFE_LOUNGE_ID):
                     continue
                 await message.channel.send(
                     f"{message.author.mention}, **{ping}** is in **{ping.voice.channel.name}**, do not disturb them <a:AngryAwooGlitch:786456477589962772>",
                     delete_after=DELETE_AFTER,
                 )
+
+        if message.author.id in self.message_count:
+            self.messge_count[message.author.id] = (
+                int(self.messge_count[message.author.id]) + 1
+            )
+            if int(self.messge_count[message.author.id]) >= 15:
+                await message.channel.send(
+                    f"{message.author.mention} You are talking too much while in study VC\nGo study baka!<a:AngryAwooGlitch:786456477589962772>",
+                    delete_after=DELETE_AFTER,
+                )
+                self.message_count[message.author.id] = 0
+        else:
+            self.message_count[message.author.id] = 1
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
@@ -191,6 +208,10 @@ class Study(commands.Cog):
             )
 
     ###########################################################
+
+    @tasks.loop(seconds=15)
+    async def update_count(self):
+        self.BOT_CHANNEL.edit(name=f"studying with {self.students_count} others")
 
     @tasks.loop(seconds=KICK_STALKERS_AFTER)
     async def kick_stalkers(self):
