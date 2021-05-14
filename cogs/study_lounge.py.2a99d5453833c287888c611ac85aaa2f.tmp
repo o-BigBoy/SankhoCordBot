@@ -115,7 +115,7 @@ class Study(commands.Cog):
         self.reset.start()
         self.students_count = len(self.get_studying())
         self.message_count = {}
-        self.coun
+        self.update_count.start()
 
     def get_studying(self):
         # RETURNS MEMBERS IN STUDY STAGE
