@@ -194,7 +194,7 @@ class Study(commands.Cog):
                 msg += f"-> **You have to turn on your video**\n     or you will be moved to <#{LOUNGE_VC_ID}>"
             elif after.channel.id == STREAM_VC_ID:
                 msg += f"-> **You have to share your screen**\n     or your time will not be counted"
-            await self.BOT_CHANNEL.send(msg, delete_after=DELETE_AFTER)
+            await self.BOT_CHANNEL.send(msg)
         elif (
             before.channel != None
             and after.channel == None
@@ -203,8 +203,7 @@ class Study(commands.Cog):
             await member.add_roles(self.NINJA_ROLE)
             await member.remove_roles(self.STUDYING_ROLE)
             await self.BOT_CHANNEL.send(
-                f"{member.mention} left <#{before.channel.id}> 🔴\n-> Access granted to other channels",
-                delete_after=DELETE_AFTER,
+                f"{member.mention} left <#{before.channel.id}> 🔴\n-> Access granted to other channels"
             )
 
     ###########################################################
