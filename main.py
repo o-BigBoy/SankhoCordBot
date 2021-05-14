@@ -14,7 +14,7 @@ intents.presences = True
 bot = commands.Bot(command_prefix=["S.", "s."], case_insensitive=True, intents=intents)
 bot.remove_command("help")
 
-BOT_CHANNEL_ID = 801100961313194004
+BOT_CHANNEL_ID = 842629324846923786
 
 
 def load_cogs():

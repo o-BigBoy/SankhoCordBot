@@ -115,7 +115,7 @@ class Study(commands.Cog):
         self.reset.start()
         self.students_count = len(self.get_studying())
         self.message_count = {}
-        self.coun
+        self.update_count.start()
 
     def get_studying(self):
         # RETURNS MEMBERS IN STUDY STAGE
@@ -165,10 +165,10 @@ class Study(commands.Cog):
                 )
 
         if message.author.id in self.message_count:
-            self.messge_count[message.author.id] = (
-                int(self.messge_count[message.author.id]) + 1
+            self.message_count[message.author.id] = (
+                int(self.message_count[message.author.id]) + 1
             )
-            if int(self.messge_count[message.author.id]) >= 15:
+            if int(self.message_count[message.author.id]) >= 15:
                 await message.channel.send(
                     f"{message.author.mention} You are talking too much while in study VC\nGo study baka!<a:AngryAwooGlitch:786456477589962772>",
                     delete_after=DELETE_AFTER,
@@ -211,7 +211,7 @@ class Study(commands.Cog):
 
     @tasks.loop(seconds=15)
     async def update_count(self):
-        self.BOT_CHANNEL.edit(name=f"studying with {self.students_count} others")
+        await self.BOT_CHANNEL.edit(name=f"studying with {self.students_count} others")
 
     @tasks.loop(seconds=KICK_STALKERS_AFTER)
     async def kick_stalkers(self):
