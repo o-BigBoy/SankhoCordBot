@@ -27,9 +27,9 @@ def load_cogs():
 async def on_ready():
     print(f"---> Logged in as : {bot.user.name} , ID : {bot.user.id}")
     print(f"---> Total Servers : {len(bot.guilds)}\n")
-    await bot.change_presence(
-        activity=discord.Activity(type=discord.ActivityType.watching, name="Ankoosh <3")
-    )
+    #await bot.change_presence(
+    #    activity=discord.Activity(type=discord.ActivityType.watching, name="Ankoosh <3")
+    #)
     load_cogs()
     channel = bot.get_channel(BOT_CHANNEL_ID)
     await channel.send(f"> BOT ONLINE AT `{datetime.now(timezone('Asia/Kolkata'))}`")
