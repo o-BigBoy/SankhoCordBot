@@ -225,7 +225,7 @@ class Study(commands.Cog):
                 await mem.move_to(channel=self.LOUNGE_VC)
                 print(f"moved {mem}")
                 await self.BOT_CHANNEL.send(
-                    f"{mem.mention} was moved to <#{LOUNGE_VC_ID}>\n->They didnot turn on video",
+                    f"{mem.mention} was moved to <#{LOUNGE_VC_ID}>\n->They did not turn on video",
                     delete_after=DELETE_AFTER,
                 )
 
