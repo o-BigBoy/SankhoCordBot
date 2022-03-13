@@ -192,7 +192,7 @@ class Study(commands.Cog):
         ):
             await member.remove_roles(self.NINJA_ROLE)
             await member.add_roles(self.STUDYING_ROLE)
-            msg = f"{member.mention} joined <#{after.channel.id}> 🟢\n-> Access blocked from other channels\n"
+            msg = f"{member.name} joined <#{after.channel.id}> 🟢\n-> Access blocked from other channels\n"
             # CHECK IF SCREENSHARE or VIDEO IS NEEDED
             if after.channel.id == VIDEO_VC_ID:
                 msg += f"-> **You have to turn on your video**\n     or you will be moved to <#{LOUNGE_VC_ID}>"
@@ -207,7 +207,7 @@ class Study(commands.Cog):
             await member.add_roles(self.NINJA_ROLE)
             await member.remove_roles(self.STUDYING_ROLE)
             await self.BOT_CHANNEL.send(
-                f"{member.mention} left <#{before.channel.id}> 🔴\n-> Access granted to other channels"
+                f"{member.name} left <#{before.channel.id}> 🔴\n-> Access granted to other channels"
             )
 
     ###########################################################
